@@ -5,5 +5,7 @@ var app = express();
 
 const scheduleCtrl = require('../controllers/schedule.controller');
 
-router.get('/schedule', scheduleCtrl.read);
 router.post('/schedule', scheduleCtrl.create);
+router.get('/schedule', scheduleCtrl.read);
+router.put('/schedule', scheduleCtrl.update);
+router.delete('/schedule', scheduleCtrl.delete);
