@@ -43,6 +43,13 @@ const scheduleRouter = require('./routes/schedule.route');
 // app.use(app.router);
 // scheduleRouter.initialize(app);
 
+var CronJob = require('cron').CronJob;
+// var job = new CronJob('0 0 0 * * *', function() {
+var job = new CronJob('* * * * * 30', function() {
+    console.log('You will see this message every second');
+}, null, true, 'America/Los_Angeles');
+job.start();
+
 const apiRoute = '/api/v1/';
 const scheduleCtrl = require('./controllers/schedule.controller');
 
