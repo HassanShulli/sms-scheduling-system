@@ -58,7 +58,7 @@ const job = new CronJob('* * * * *', function() {
             console.log('-----');
             response.data.result.forEach(data => {
                 console.log('data._id : ', data._id);
-                cronGenerator(data.sendTime, data.message, data.recipient);
+                // cronGenerator(data.sendTime, data.message, data.recipient);
             })
         })
         .catch(function (error) {

@@ -29,6 +29,20 @@ exports.read = function (req, res) {
     )
 };
 
+exports.readToday = function (req, res) {
+    let today = new Date();
+
+    Schedule.find({"sendTime" : {"$gte": , {"$lt": }},
+        function (err, schedules) {
+            if (err) {
+                res.json({success: false, result: [], messages: [err.message]});
+            } else {
+                res.json({success: true, result: schedules, messages: []});
+            }
+        }
+    )
+};
+
 exports.update = function (req, res) {
     const updatedSchedule = new Schedule({
         sendTime: req.body.sendTime,

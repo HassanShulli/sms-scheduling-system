@@ -1,10 +1,14 @@
-var CronJob = require('cron').CronJob;
+const CronJob = require('cron').CronJob;
+const formatDate = require('./date.helper');
 
 function cronGenerator(time, message, list) {
-    console.log('time  : ',time);
-    console.log('message  : ',message);
-    console.log('list  : ',list);
-    new CronJob(time, function() {
+    let formattedTime = formatDate(time);
+    let cronTime = `${formattedTime.minute} ${formattedTime.hour} * * *`;
+    console.log('time  : ', time);
+    console.log('message  : ', message);
+    console.log('list  : ', list);
+    console.log('cronTime  : ', cronTime);
+    new CronJob(cronTime, function () {
         console.log('You will see this message every 10 second');
 
         axios.get('http://localhost:3000/api/v1/schedule')
