@@ -1,17 +1,20 @@
-var express = require("express");
-var morgan = require('morgan');
-var app = express();
+const express = require("express");
+const morgan = require('morgan');
+const app = express();
 app.use(morgan('combined'));
+const axios = require('axios').default;
+const cronGenerator = require('./helpers/cron.helper');
+const CronJob = require('cron').CronJob;
 
 // var port = process.env.PORT || 8080;    // for heroku
-var port = 3000;    // for local use
-var bodyParser = require('body-parser');
+const port = 3000;    // for local use
+const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost:27017/POS_DB");  //for local mongo use
 // mongoose.connect("mongodb://pos_admin1:pos_admin1@ds151530.mlab.com:51530/pos_app", {useMongoClient: true}); //mlab
@@ -43,10 +46,26 @@ const scheduleRouter = require('./routes/schedule.route');
 // app.use(app.router);
 // scheduleRouter.initialize(app);
 
-var CronJob = require('cron').CronJob;
-// var job = new CronJob('0 0 0 * * *', function() {
-var job = new CronJob('* * * * * 30', function() {
-    console.log('You will see this message every second');
+// var job = new CronJob('0 0 * * *', function() { // cron midnight schedule
+const job = new CronJob('* * * * *', function() {
+    console.log('You will see this message every 10 second');
+
+    axios.get('http://localhost:3000/api/v1/schedule')
+        .then(function (response) {
+            // handle success
+            console.log('-----');
+            console.log('get api schedule response : response.data.result :', response.data.result);
+            console.log('-----');
+            response.data.result.forEach(data => {
+                console.log('data._id : ', data._id);
+                cronGenerator(data.sendTime, data.message, data.recipient);
+            })
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
+
 }, null, true, 'America/Los_Angeles');
 job.start();
 
@@ -66,4 +85,3 @@ app.listen(port, function () {
     console.log("Server listening on port " + port);
 
 });
-// module.exports = router;
