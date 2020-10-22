@@ -39,7 +39,6 @@ exports.readToday = function (req, res) {
             if (err) {
                 res.json({success: false, result: [], messages: [err.message]});
             } else {
-                console.log('schedules : ', schedules);
                 res.json({success: true, result: schedules, messages: []});
             }
         }
