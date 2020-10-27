@@ -30,15 +30,16 @@ exports.read = function (req, res) {
 };
 
 exports.readToday = function (req, res) {
-    let today = new Date();
-    let startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    let startOfTomorrow = (today.getDate() + 1);
+    
+    var now = new Date();
+    var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    Schedule.find({"sendTime" : {"$gte": startOfToday, "$lt": startOfTomorrow}},
+    Schedule.find({"sendTime" : {"$gte": startOfToday}},
         function (err, schedules) {
             if (err) {
                 res.json({success: false, result: [], messages: [err.message]});
             } else {
+                console.log('schedules : ', schedules);
                 res.json({success: true, result: schedules, messages: []});
             }
         }

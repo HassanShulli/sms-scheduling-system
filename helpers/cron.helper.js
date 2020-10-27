@@ -1,28 +1,29 @@
 const CronJob = require('cron').CronJob;
 const formatDate = require('./date.helper');
+const smsController = require('../controllers/sms.controller');
 
 function cronGenerator(time, message, list) {
     let formattedTime = formatDate(time);
     let cronTime = `${formattedTime.minute} ${formattedTime.hour} * * *`;
-    console.log('time  : ', time);
-    console.log('message  : ', message);
-    console.log('list  : ', list);
-    console.log('cronTime  : ', cronTime);
     new CronJob(cronTime, function () {
-        console.log('You will see this message every 10 second');
+        smsController.sendMessage()
+            .then(res => {
+                let resendMessages = [];
+                res.forEach(message => {
+                    smsController.getMessageStatus(res.message_id)
+                        .then(res => {
+                            if (res.status === 'DELIVRD') {
+                                console.log('MessageSent');
+                            } else {
+                                resendMessages.push(res);
+                            }
+                        })
+                })
 
-        axios.get('http://localhost:3000/api/v1/schedule')
-            .then(function (response) {
-                // handle success
-                console.log('-----');
-                console.log('get api schedule response : ', response.data);
-                console.log('-----');
+                if (resendMessages.length > 0) {
+                    console.log('resend undelivered Messages');
+                }
             })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            });
-
     }, null, true, 'America/Los_Angeles');
 }
 
