@@ -28,7 +28,7 @@ Sample Request Body:
         "60112141932"
     ]
 }
-
+```
 2) Update a schedule.
 
 PUT : localhost:3000/api/v1/schedule
