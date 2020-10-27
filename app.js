@@ -6,8 +6,7 @@ const axios = require('axios').default;
 const cronGenerator = require('./helpers/cron.helper');
 const CronJob = require('cron').CronJob;
 
-// var port = process.env.PORT || 8080;    // for heroku
-const port = 3000;    // for local use
+const port = 3000;  
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
@@ -36,7 +35,6 @@ app.use(function (req, res, next) {
 });
 
 var job = new CronJob('0 0 * * *', function() {
-    console.log('You will see this message every 10 second');
 
     axios.get('http://localhost:3000/api/v1/schedule')
         .then(function (response) {
@@ -45,7 +43,6 @@ var job = new CronJob('0 0 * * *', function() {
             })
         })
         .catch(function (error) {
-            // handle error
             console.log(error);
         });
 
